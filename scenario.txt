@@ -1,0 +1,27 @@
+REAL-LIFE SCENARIO
+
+Company Policy Approval Pipeline
+
+Situation:
+
+An employee writes a company policy document.
+It must go through:
+
+- Drafting
+- Manager review
+- Approval / rejection
+- Possible rework
+- Final approval
+
+Mapping Real Life -> Code
+
+Real Life Action  ->	Code Call
+Employee drafts policy	new Document()
+Employee edits policy	document.edit()
+Employee submits policy	document.submit()
+Manager reviews policy	(implicit – state = REVIEW)
+Manager rejects policy	document.reject()
+Employee revises policy	document.edit()
+Employee resubmits	document.submit()
+Manager approves	document.approve()
+Policy is locked	ApprovedState

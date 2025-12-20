@@ -1,0 +1,11 @@
+# Ignore compiled Java bytecode
+*.class
+
+# Ignore log files
+*.log
+
+# Ignore OS files
+.DS_Store
+
+# Ignore VS Code settings (optional but recommended)
+.vscode/
