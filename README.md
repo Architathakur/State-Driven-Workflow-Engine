@@ -1,124 +1,135 @@
-# State-Driven Workflow Engine for Approval Pipelines (Java)
+# State-Driven Workflow Engine
+
+A Java implementation of the State design pattern for approval workflows. The project models a document approval pipeline where behavior changes based on the document's current state: `DRAFT`, `REVIEW`, `REJECTED`, or `APPROVED`.
+
+The goal is to keep workflow rules encapsulated inside state classes instead of scattering conditional logic throughout the application.
 
 ## Overview
 
-This project is a State-Driven Workflow Engine implemented in Java to model real-world approval pipelines such as company policy approvals, document reviews, or request validation systems.
+Approval workflows often need to enforce rules such as:
 
-Instead of using complex conditional (if-else) logic, the system applies Object-Oriented Programming (OOPS) principles to delegate behavior to individual state objects, making the workflow clean, extensible, and easy to maintain.
+- Draft documents can be edited and submitted for review.
+- Documents under review cannot be edited.
+- Rejected documents can be revised and resubmitted.
+- Approved documents are final and cannot be changed.
 
+This project demonstrates how those rules can be implemented cleanly with object-oriented design. The `Document` class delegates each action to the active state object, and each state decides whether the action is allowed, blocked, or should trigger a transition.
 
-## Problem Statement
+## Features
 
-In real-world systems, entities like documents or requests go through multiple stages (Draft, Review, Approved, Rejected).
-Handling such workflows using conditional logic leads to:
+- State-driven workflow behavior using the State pattern
+- Clear separation between workflow context and state-specific rules
+- Prevention of invalid transitions
+- Audit logging with timestamps in `workflow.log`
+- Console-based demonstration scenario
+- Lightweight transition regression test
 
-a. Hard-to-maintain code
-b. Poor extensibility
-c. High risk of invalid state transitions
+## Workflow
 
-This project solves the problem by modeling state-dependent behavior using OOPS.
-
-
-## Solution Approach
-
-Each workflow stage is represented as a State object
-
-The Document class delegates actions to its current state
-
-Each state defines:
-- Which actions are allowed
-- Which actions are blocked
-- How transitions happen
-- No conditional checks (if-else) are used for state handling
-
-This design follows the State Pattern.
-
+```text
+DRAFT -> REVIEW -> APPROVED
+           |
+           v
+        REJECTED -> REVIEW
+```
 
 ## Project Structure
 
-State-Driven-Workflow-Engine/
-│
+```text
+state-driven-workflow-engine/
 ├── Main.java
-├── workflow/
-│   └── Document.java
-│
+├── README.md
+├── scenario.txt
 ├── state/
-│   ├── State.java
-│   ├── DraftState.java
-│   ├── ReviewState.java
 │   ├── ApprovedState.java
-│   └── RejectedState.java
-│
+│   ├── DraftState.java
+│   ├── RejectedState.java
+│   ├── ReviewState.java
+│   └── State.java
+├── tests/
+│   └── WorkflowTest.java
 ├── util/
 │   └── LoggerUtil.java
-│
-└── README.md
+└── workflow/
+    └── Document.java
+```
 
+## Design
 
-## Workflow Lifecycle
-Draft → Review → Approved
-          ↓
-       Rejected → Review
+The implementation uses four main concepts:
 
+| Concept | Implementation |
+| --- | --- |
+| Abstraction | `State` interface defines supported workflow actions |
+| Polymorphism | Each state implements actions differently |
+| Encapsulation | State-specific rules stay inside state classes |
+| Delegation | `Document` delegates behavior to its current state |
 
-## OOPS Concepts Used
-OOPS Concept  ->	Implementation
-Abstraction 	    State interface
-Polymorphism    	Different behavior for each state
-Encapsulation	    State logic hidden inside classes
-Open–Closed Principle	New states can be added without modifying existing code
-Delegation	        Document delegates behavior to states
-Single Responsibility	Each state handles its own behavior
+## How It Works
 
+The `Document` starts in `DraftState`. Public actions such as `edit()`, `submit()`, `approve()`, and `reject()` are delegated to the current state.
 
-## Key Features
-- State-driven behavior without conditional logic
-- Clean and extensible workflow transitions
-- Prevention of invalid actions based on state
-- File-based logging with timestamps
-- Realistic approval pipeline simulation
+When an action causes a valid transition, the state returns the next state. The `Document` applies the transition internally, keeping direct state changes hidden from external callers.
 
+## Run the Project
 
-## File Logging & Timestamps
+Compile the source files:
 
-The project includes audit logging using file handling:
-- All major actions are logged to workflow.log
-- Each log entry includes a timestamp
-- Helps in traceability and debugging
-
-Sample log entry:
-[2025-01-20 14:32:10] Document submitted from DRAFT to REVIEW
-
-
-## How to Run the Project
-
-1. Compile all files
+```bash
 javac Main.java workflow/*.java state/*.java util/*.java
+```
 
-2. Run the program
+Run the demo workflow:
+
+```bash
 java Main
+```
 
+## Run Tests
 
-## Example Use Case
+Compile the application and test classes into an output directory:
 
-The Main class simulates a company policy approval workflow:
+```bash
+javac -d out Main.java workflow/*.java state/*.java util/*.java tests/*.java
+```
 
-1. Employee creates a policy (Draft)
-2. Submits for review
-3. Manager rejects it
-4. Employee revises and resubmits
-5. Manager approves the document
-6. Further edits are blocked after approval
+Run the transition test:
 
+```bash
+java -cp out tests.WorkflowTest
+```
+
+## Example Scenario
+
+The included demo models a company policy approval flow:
+
+1. An employee creates a policy document.
+2. The employee edits the draft.
+3. The employee submits it for review.
+4. The manager rejects it.
+5. The employee revises and resubmits it.
+6. The manager approves it.
+7. Further edits are blocked after approval.
+
+## Logging
+
+Workflow activity is written to `workflow.log` with timestamps. Logged events include document creation, successful state transitions, approvals, rejections, edits, resubmissions, and blocked actions.
+
+Example:
+
+```text
+[2026-06-28 23:32:33] Document approved from REVIEW state.
+```
 
 ## Future Enhancements
-- Custom exception handling
-- Persistent storage using a database
-- Role-based access control
-- GUI or web interface
 
+- Add a formal build tool such as Maven or Gradle
+- Add JUnit-based automated tests
+- Support role-based access control
+- Persist workflow history in a database
+- Add a web or desktop interface
 
 ## Author
 
-Archita Thakur
+Archita Thakur  
 Computer Science & AI Student

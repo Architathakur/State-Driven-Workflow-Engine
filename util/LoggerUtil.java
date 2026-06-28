@@ -9,6 +9,9 @@ public class LoggerUtil {
 
     private static final String LOG_FILE = "workflow.log";
 
+    private LoggerUtil() {
+    }
+
     public static void log(String message) {
         try (FileWriter writer = new FileWriter(LOG_FILE, true)) {
 
@@ -18,8 +21,7 @@ public class LoggerUtil {
             writer.write("[" + timeStamp + "] " + message + "\n");
 
         } catch (IOException e) {
-            System.out.println("Error writing to log file.");
+            System.err.println("Error writing to log file: " + e.getMessage());
         }
     }
 }
-

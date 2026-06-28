@@ -1,28 +1,35 @@
 package state;
 
-import workflow.Document;
+import util.LoggerUtil;
 
 public class RejectedState implements State {
 
     @Override
-    public void edit(Document document) {
+    public State edit() {
         System.out.println("Editing the document after rejection.");
+        LoggerUtil.log("Edited document in REJECTED state.");
+        return this;
     }
 
     @Override
-    public void submit(Document document) {
+    public State submit() {
         System.out.println("Resubmitting document for review...");
-        document.setState(new ReviewState());
+        LoggerUtil.log("Document resubmitted from REJECTED to REVIEW.");
+        return new ReviewState();
     }
 
     @Override
-    public void approve(Document document) {
+    public State approve() {
         System.out.println("Cannot approve. Document must be reviewed again.");
+        LoggerUtil.log("Blocked approval attempt while document was in REJECTED state.");
+        return this;
     }
 
     @Override
-    public void reject(Document document) {
+    public State reject() {
         System.out.println("Document is already rejected.");
+        LoggerUtil.log("Blocked rejection attempt while document was already in REJECTED state.");
+        return this;
     }
 
     @Override

@@ -1,27 +1,35 @@
 package state;
 
-import workflow.Document;
+import util.LoggerUtil;
 
 public class ApprovedState implements State {
 
     @Override
-    public void edit(Document document) {
+    public State edit() {
         System.out.println("Cannot edit. Document is already approved.");
+        LoggerUtil.log("Blocked edit attempt while document was in APPROVED state.");
+        return this;
     }
 
     @Override
-    public void submit(Document document) {
+    public State submit() {
         System.out.println("Cannot submit. Document is already approved.");
+        LoggerUtil.log("Blocked submit attempt while document was in APPROVED state.");
+        return this;
     }
 
     @Override
-    public void approve(Document document) {
+    public State approve() {
         System.out.println("Document is already approved.");
+        LoggerUtil.log("Blocked approval attempt while document was already in APPROVED state.");
+        return this;
     }
 
     @Override
-    public void reject(Document document) {
+    public State reject() {
         System.out.println("Cannot reject. Approved document is final.");
+        LoggerUtil.log("Blocked rejection attempt while document was in APPROVED state.");
+        return this;
     }
 
     @Override
@@ -29,4 +37,3 @@ public class ApprovedState implements State {
         return "APPROVED";
     }
 }
-

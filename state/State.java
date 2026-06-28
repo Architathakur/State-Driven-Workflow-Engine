@@ -1,22 +1,19 @@
 package state;
 
-import workflow.Document;
-
 public interface State {
 
     // Action: edit the document
-    void edit(Document document);
+    State edit();
 
     // Action: submit the document for review
-    void submit(Document document);
+    State submit();
 
     // Action: approve the document
-    void approve(Document document);
+    State approve();
 
     // Action: reject the document
-    void reject(Document document);
+    State reject();
 
     // Utility method to identify the state
     String getStateName();
 }
-

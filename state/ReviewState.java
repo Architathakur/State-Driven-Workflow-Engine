@@ -1,29 +1,35 @@
 package state;
 
-import workflow.Document;
+import util.LoggerUtil;
 
 public class ReviewState implements State {
 
     @Override
-    public void edit(Document document) {
+    public State edit() {
         System.out.println("Cannot edit document in Review state.");
+        LoggerUtil.log("Blocked edit attempt while document was in REVIEW state.");
+        return this;
     }
 
     @Override
-    public void submit(Document document) {
+    public State submit() {
         System.out.println("Document is already under review.");
+        LoggerUtil.log("Blocked submit attempt while document was already in REVIEW state.");
+        return this;
     }
 
     @Override
-    public void approve(Document document) {
+    public State approve() {
         System.out.println("Document approved.");
-        document.setState(new ApprovedState());
+        LoggerUtil.log("Document approved from REVIEW state.");
+        return new ApprovedState();
     }
 
     @Override
-    public void reject(Document document) {
+    public State reject() {
         System.out.println("Document rejected.");
-        document.setState(new RejectedState());
+        LoggerUtil.log("Document rejected from REVIEW state.");
+        return new RejectedState();
     }
 
     @Override
@@ -31,4 +37,3 @@ public class ReviewState implements State {
         return "REVIEW";
     }
 }
-

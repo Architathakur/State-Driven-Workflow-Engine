@@ -16,28 +16,40 @@ public class Document {
         LoggerUtil.log("Document created. Initial State: " + currentState.getStateName());
     }
 
+    private void applyAction(State nextState) {
+        if (nextState != null && nextState != currentState) {
+            setState(nextState);
+        }
+    }
+
     // Method to change the state of the document
-    public void setState(State state) {
+    private void setState(State state) {
+        if (state == null) {
+            throw new IllegalArgumentException("Document state cannot be null.");
+        }
         this.currentState = state;
         System.out.println("Document state changed to: " + state.getStateName());
         LoggerUtil.log("Document state changed to: " + state.getStateName());
     }
 
+    public String getStateName() {
+        return currentState.getStateName();
+    }
+
     // Delegate actions to the current state
     public void edit() {
-        currentState.edit(this);
+        applyAction(currentState.edit());
     }
 
     public void submit() {
-        currentState.submit(this);
+        applyAction(currentState.submit());
     }
 
     public void approve() {
-        currentState.approve(this);
+        applyAction(currentState.approve());
     }
 
     public void reject() {
-        currentState.reject(this);
+        applyAction(currentState.reject());
     }
 }
-

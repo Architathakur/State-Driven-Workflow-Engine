@@ -1,32 +1,36 @@
 package state;
 
-import workflow.Document;
 import util.LoggerUtil;
 
 
 public class DraftState implements State {
 
     @Override
-    public void edit(Document document) {
+    public State edit() {
         System.out.println("Editing the document in Draft state.");
         LoggerUtil.log("Edited document in DRAFT state.");
+        return this;
     }
 
     @Override
-    public void submit(Document document) {
+    public State submit() {
         System.out.println("Submitting document for review...");
         LoggerUtil.log("Document submitted from DRAFT to REVIEW.");
-        document.setState(new ReviewState());
+        return new ReviewState();
     }
 
     @Override
-    public void approve(Document document) {
+    public State approve() {
         System.out.println("Cannot approve a document in Draft state.");
+        LoggerUtil.log("Blocked approval attempt while document was in DRAFT state.");
+        return this;
     }
 
     @Override
-    public void reject(Document document) {
+    public State reject() {
         System.out.println("Cannot reject a document in Draft state.");
+        LoggerUtil.log("Blocked rejection attempt while document was in DRAFT state.");
+        return this;
     }
 
     @Override
@@ -34,4 +38,3 @@ public class DraftState implements State {
         return "DRAFT";
     }
 }
-
